@@ -13,21 +13,17 @@ config.whatsappNumber = '5583986693820';
 
 // Substitua o src de assets/images/dev-photo.svg pela sua foto quando estiver pronto.
 
-// Smooth scroll to section
-document.querySelectorAll('.vertical-nav li').forEach(li=>{
-  li.addEventListener('click',()=>{
-    const id = li.dataset.target;
-    const el = document.getElementById(id);
-    if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
-  });
-});
-
-// Update active nav item on click (also used by scroll observer below)
-document.querySelectorAll('.vertical-nav li').forEach(li=>{
-  li.addEventListener('click', ()=>{
-    document.querySelectorAll('.vertical-nav li').forEach(x=>x.classList.remove('active'));
+// Active state for multi-page navigation
+const currentPage = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+document.querySelectorAll('.vertical-nav li').forEach(li => {
+  const link = li.querySelector('a');
+  if(!link) return;
+  const href = (link.getAttribute('href') || '').toLowerCase();
+  if(currentPage === href || (currentPage === '' && href === 'index.html')) {
     li.classList.add('active');
-  });
+  } else {
+    li.classList.remove('active');
+  }
 });
 
 // Mobile nav toggle
@@ -35,7 +31,9 @@ const navToggle = document.getElementById('navToggle');
 const vnav = document.getElementById('verticalNav');
 if(navToggle){
   navToggle.addEventListener('click',()=>{
-    vnav.classList.toggle('open');
+    const isOpen = vnav.classList.toggle('open');
+    navToggle.classList.toggle('open', isOpen);
+    navToggle.setAttribute('aria-expanded', String(isOpen));
   });
 }
 
@@ -49,21 +47,6 @@ const observer = new IntersectionObserver((entries)=>{
 },{threshold:0.12});
 
 document.querySelectorAll('.section, .photo-wrap img, .card, .project-card, .contact-link').forEach(el=>observer.observe(el));
-
-// Observe sections to update vertical nav active state while scrolling
-const sectionObserver = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      const id = entry.target.id;
-      const li = document.querySelector(`.vertical-nav li[data-target="${id}"]`);
-      if(li){
-        document.querySelectorAll('.vertical-nav li').forEach(x=>x.classList.remove('active'));
-        li.classList.add('active');
-      }
-    }
-  });
-},{threshold:0.45});
-document.querySelectorAll('section[id]').forEach(s=>sectionObserver.observe(s));
 
 // Counters (numbers easy to edit in HTML: use data-target attribute)
 document.querySelectorAll('.counter').forEach(counter=>{
