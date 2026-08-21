@@ -68,7 +68,7 @@ document.getElementById('linkedin').href = config.social.linkedin;
   if(!imgEl) return;
   // Ensure immediate visible fallback while we probe for processed files
   // Use foto2.png as the immediate visible image for local preview
-  imgEl.src = 'assets/images/foto2.png';
+  imgEl.src = 'assets/images/dev.png';
   const webp = 'assets/images/dev-photo.webp';
   const png = 'assets/images/dev-photo.png';
   const cacheBust = src => src + '?v=' + Date.now();
